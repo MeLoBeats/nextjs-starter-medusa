@@ -8,6 +8,7 @@ import CartMismatchBanner from "@modules/layout/components/cart-mismatch-banner"
 import Footer from "@modules/layout/templates/footer"
 import Nav from "@modules/layout/templates/nav"
 import FreeShippingPriceNudge from "@modules/shipping/components/free-shipping-price-nudge"
+import { BubbleBackground } from "components/animate-ui/components/backgrounds/bubble"
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
@@ -38,6 +39,14 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
           shippingOptions={shippingOptions}
         />
       )}
+      <BubbleBackground interactive colors={{
+        first: "0,0,0",
+        second: "0,0,0",
+        third: "0,0,0",
+        fourth: "0,0,0",
+        fifth: "0,0,0",
+        sixth: "0,0,0",
+      }} className="fixed -z-10 inset-0 from-white to-black" />
       {props.children}
       <Footer />
     </>

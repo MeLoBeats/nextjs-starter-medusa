@@ -1,157 +1,105 @@
-import { listCategories } from "@lib/data/categories"
-import { listCollections } from "@lib/data/collections"
-import { Text, clx } from "@medusajs/ui"
+import Link from 'next/link';
+import { Instagram, Mail, MapPin } from 'lucide-react';
+import React from 'react';
+import AppLogo from '@modules/layout/app-logo';
 
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
+// Composant TikTok Icon personnalisé
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M19.321 5.562a5.124 5.124 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.849-1.349-1.849-1.349-2.838C16.392.775 15.617 0 14.892 0h-3.892v15.108c0 1.849-1.5 3.349-3.349 3.349s-3.349-1.5-3.349-3.349 1.5-3.349 3.349-3.349c.366 0 .717.059 1.046.167V7.562a7.35 7.35 0 0 0-1.046-.075C3.201 7.487 0 10.688 0 14.639s3.201 7.151 7.651 7.151 7.651-3.201 7.651-7.151V8.562c1.5 1.075 3.349 1.7 5.349 1.7V6.387c-1.5 0-2.849-.575-3.849-1.5l-.481.675z"/>
+  </svg>
+);
 
-export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  })
-  const productCategories = await listCategories()
+export const AppFooter = () => {
+    const currentYear = new Date().getFullYear();
 
-  return (
-    <footer className="border-t border-ui-border-base w-full">
-      <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
-            <LocalizedClientLink
-              href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
-            >
-              Medusa Store
-            </LocalizedClientLink>
-          </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {productCategories && productCategories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {productCategories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
-                      return
-                    }
+    const footerLinks = {
+        company: [
+            { label: 'À propos', href: '/about' },
+            { label: 'Contact', href: '/contact' },
+        ],
+        legal: [
+            { label: "Conditions d'utilisation", href: '/legal/terms' },
+            { label: 'Politique de confidentialité', href: '/legal/privacy' },
+            { label: 'Cookies', href: '/legal/cookies' },
+        ],
+    };
 
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null
+    const socialLinks = [
+        { icon: <Instagram className="size-5" />, href: 'https://instagram.com/noktrastudio', label: 'Instagram' },
+        { icon: <TikTokIcon className="size-5" />, href: 'https://tiktok.com/@noktra_studio', label: 'TikTok' },
+    ];
 
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
+    return (
+        <footer className="bg-black pb-5 text-white dark:bg-black dark:text-white">
+            {/* Main Footer Content */}
+            <div className="px-8 md:px-40 pt-16">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+                    {/* Logo & Description */}
+                    <div className="lg:col-span-2">
+                        <div className="mb-4 inline-block">
+                            <AppLogo />
+                        </div>
+                        <p className="mb-6 max-w-sm text-gray-400">
+                            Plongez dans l'univers de la mode sombre et sophistiquée. Des pièces uniques qui transforment l'obscurité en matière
+                            première du style.
+                        </p>
+                        <div className="space-y-2">
+                            <div className="flex items-center text-sm text-gray-400">
+                                <Mail className="mr-2 size-4" />
+                                contact@noktra.studio
+                            </div>
+                            <div className="flex items-center text-sm text-gray-400">
+                                <MapPin className="mr-2 size-4" />
+                                Paris, France
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Legal Links */}
+                    <div>
+                        <h4 className="mb-4 font-semibold">Légal</h4>
+                        <ul className="space-y-2">
+                            {footerLinks.legal.map((link) => (
+                                <li key={link.href}>
+                                    <Link href={link.href} className="text-sm text-gray-400 transition-colors hover:text-white">
+                                        {link.label}
+                                    </Link>
                                 </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
-                  </a>
-                </li>
-              </ul>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Social Links & Copyright */}
+                <div className="mt-12 border-t border-gray-800 pt-8">
+                    <div className="flex flex-col items-center justify-between md:flex-row">
+                        <div className="mb-4 flex space-x-4 md:mb-0">
+                            {socialLinks.map((social) => (
+                                <a
+                                    key={social.label}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="rounded-full bg-gray-900 p-2 transition-colors hover:bg-gray-800"
+                                    aria-label={social.label}
+                                >
+                                    {social.icon}
+                                </a>
+                            ))}
+                        </div>
+                        <div className="text-center text-sm text-gray-400">© {currentYear} Noktra Studio. Tous droits réservés.</div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
-          <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
-          </Text>
-          <MedusaCTA />
-        </div>
-      </div>
-    </footer>
-  )
-}
+            {/* Newsletter Section */}
+        </footer>
+    );
+};
+
+export default AppFooter
